@@ -137,8 +137,9 @@ int fps = 30;
 int orientation = -1;
 float intensity = 1.0;
 const int nombre_pas = 30;
-int max_pas = nombre_pas - 1;
-int pas = nombre_pas - 1;
+int min_pas = 1;
+int max_pas = nombre_pas;
+int pas = nombre_pas;
 
 void line_create_color(void)
 {
@@ -147,7 +148,7 @@ void line_create_color(void)
 	// b = (line[0]) & 0xff;
 
 	pas = pas + orientation;
-	if (pas <= 0)
+	if (pas <= min_pas)
 	{
 		orientation = -orientation;
 	}
