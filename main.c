@@ -47,6 +47,7 @@ static char VERSION[] = "XX.YY.ZZ";
 #include "dma.h"
 #include "pwm.h"
 #include "version.h"
+#include "math.h"
 
 #include "ws2811.h"
 
@@ -136,10 +137,14 @@ uint8_t b;
 int fps = 30;
 int orientation = -1;
 float intensity = 1.0;
-const int nombre_pas = 30;
+const int nombre_pas = 360;
 int min_pas = 1;
 int max_pas = nombre_pas;
 int pas = nombre_pas;
+
+const float pi = 3.14159265358979323846;
+const float deux_pi = pi * 2.0;
+const float tier_de_tour = 1.0 / 3.0 * deux_pi;
 
 void line_create_color(void)
 {
@@ -159,9 +164,13 @@ void line_create_color(void)
 
 	intensity = (float)pas / (float)max_pas;
 
-	r = 255.0 * intensity;
-	g = 3.0 * intensity;
-	b = 214.0 * intensity;
+	// r = 255.0 * intensity;
+	// g = 3.0 * intensity;
+	// b = 214.0 * intensity;
+
+	r = 255.0 * sin(intensity * deux_pi);
+	g = 255.0 * sin(intensity * deux_pi + tier_de_tour);
+	b = 255.0 * sin(intensity * deux_pi + 2.0 * tier_de_tour);
 
 	// printf("%2x %2x %2x\n", r, g, b);
 
