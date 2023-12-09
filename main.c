@@ -131,53 +131,48 @@ void line_animate(void)
 	}
 }
 
-typedef struct channels
-{
-	uint8_t w;
-	uint8_t r;
-	uint8_t g;
-	uint8_t b;
-} channels;
-
-channels c = {
-	.w = 0,
-	.r = 0,
-	.g = 0,
-	.b = 0,
-};
+uint8_t r;
+uint8_t g;
+uint8_t b;
 
 void line_create_color(void)
 {
-	memcpy(&c, &line[0], 4);
+	r = (line[0] >> 16) & 0xff;
+	g = (line[0] >> 8) & 0xff;
+	b = (line[0]) & 0xff;
 
-	if (c.b == 255)
+	if (b == 255)
 	{
-		c.b = 0;
-		c.b = 1;
+		b = 0;
+		g = 1;
 	}
-	if (c.g == 255)
+	if (g == 255)
 	{
-		c.g = 0;
-		c.r = 1;
+		g = 0;
+		r = 1;
 	}
-	if (c.r == 255)
+	if (r == 255)
 	{
-		c.b = 1;
-		c.g = 1;
-		c.r = 1;
+		r = 1;
+		g = 1;
+		b = 1;
 	}
 
-	if (c.r > 0 && c.r < 255)
-		c.r++;
-	if (c.g > 0 && c.g < 255)
-		c.g++;
-	if (c.b > 0 && c.b < 255)
-		c.b++;
+	if (r > 0 && r < 255)
+		r++;
+	if (g > 0 && g < 255)
+		g++;
+	if (b > 0 && b < 255)
+		b++;
 
-	if (c.r == 0 && c.g == 0 && c.b == 0)
-		c.b = 1;
+	if (r == 0 && g == 0 && b == 0)
+		b = 1;
 
-	memcpy(&line[0], &c, 4);
+	printf("%2x %2x %2x\n", r, g, b);
+
+	line[0] = (r << 16) + (g << 8) + b;
+
+	printf("%8x\n", line[0]);
 }
 
 void matrix_clear(void)
@@ -379,7 +374,7 @@ int main(int argc, char *argv[])
 {
 	ws2811_return_t ret;
 
-	sprintf(VERSION, "%c.%c.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
+	sprintf(VERSION, "%%%d", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
 
 	parseargs(argc, argv, &ledstring);
 
