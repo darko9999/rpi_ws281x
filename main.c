@@ -94,7 +94,7 @@ ws2811_led_t *line;
 
 static uint8_t running = 1;
 
-int fps = 30;
+int fps = 60;
 
 void line_render(void)
 {
@@ -168,11 +168,11 @@ void line_create_color(void)
 	if (r == 0 && g == 0 && b == 0)
 		b = 1;
 
-	printf("%2x %2x %2x\n", r, g, b);
+	// printf("%2x %2x %2x\n", r, g, b);
 
 	line[0] = (r << 16) + (g << 8) + b;
 
-	printf("%8x\n", line[0]);
+	// printf("%8x\n", line[0]);
 }
 
 void matrix_clear(void)
@@ -400,7 +400,7 @@ int main(int argc, char *argv[])
 			break;
 		}
 
-		usleep(1000000 / fps);
+		// usleep(1000000 / fps);
 	}
 
 	if (clear_on_exit)
