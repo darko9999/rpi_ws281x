@@ -54,7 +54,7 @@ static char VERSION[] = "XX.YY.ZZ";
 
 // defaults for cmdline options
 #define TARGET_FREQ WS2811_TARGET_FREQ
-#define GPIO_PIN 10
+#define GPIO_PIN 12
 #define DMA 10
 #define STRIP_TYPE WS2811_STRIP_RGB // WS2812/SK6812RGB integrated chip+leds
 // #define STRIP_TYPE              WS2811_STRIP_GBR		// WS2812/SK6812RGB integrated chip+leds
@@ -65,6 +65,8 @@ static char VERSION[] = "XX.YY.ZZ";
 int led_count = LED_COUNT;
 
 int clear_on_exit = 0;
+
+int fps = 1;
 
 ws2811_t ledstring =
 	{
@@ -115,7 +117,7 @@ void line_animate(void)
 void matrix_clear(void)
 {
 	int i;
-	for (i = 0; i < width; i++)
+	for (i = 0; i < led_count; i++)
 	{
 		line[i] = 0;
 	}
@@ -140,7 +142,7 @@ void matrix_clear(void)
 
 void line_create_color(void)
 {
-	line[0] = 0x00000020, // blue
+	line[0] = 0x00000020; // blue
 }
 
 static void ctrl_c_handler(int signum)
@@ -173,8 +175,7 @@ void parseargs(int argc, char **argv, ws2811_t *ws2811)
 			{"invert", no_argument, 0, 'i'},
 			{"clear", no_argument, 0, 'c'},
 			{"strip", required_argument, 0, 's'},
-			{"height", required_argument, 0, 'y'},
-			{"width", required_argument, 0, 'x'},
+			{"ledcount", required_argument, 0, 'l'},
 			{"version", no_argument, 0, 'v'},
 			{0, 0, 0, 0}};
 
@@ -198,8 +199,7 @@ void parseargs(int argc, char **argv, ws2811_t *ws2811)
 			fprintf(stderr, "Usage: %s \n"
 							"-h (--help)    - this information\n"
 							"-s (--strip)   - strip type - rgb, grb, gbr, rgbw\n"
-							"-x (--width)   - matrix width (default 8)\n"
-							"-y (--height)  - matrix height (default 8)\n"
+							"-l (--ledcount)- led count on line (default 120)\n"
 							"-d (--dma)     - dma channel to use (default 10)\n"
 							"-g (--gpio)    - GPIO to use\n"
 							"                 If omitted, default is 18 (PWM0)\n"
@@ -258,33 +258,17 @@ void parseargs(int argc, char **argv, ws2811_t *ws2811)
 			}
 			break;
 
-		case 'y':
+		case 'l':
 			if (optarg)
 			{
-				height = atoi(optarg);
-				if (height > 0)
+				led_count = atoi(optarg);
+				if (led_count > 0)
 				{
-					ws2811->channel[0].count = height * width;
+					ws2811->channel[0].count = led_count;
 				}
 				else
 				{
-					printf("invalid height %d\n", height);
-					exit(-1);
-				}
-			}
-			break;
-
-		case 'x':
-			if (optarg)
-			{
-				width = atoi(optarg);
-				if (width > 0)
-				{
-					ws2811->channel[0].count = height * width;
-				}
-				else
-				{
-					printf("invalid width %d\n", width);
+					printf("invalid ledcount %d\n", led_count);
 					exit(-1);
 				}
 			}
@@ -355,7 +339,7 @@ int main(int argc, char *argv[])
 
 	parseargs(argc, argv, &ledstring);
 
-	line = malloc(sizeof(ws2811_led_t) * width * height);
+	line = malloc(sizeof(ws2811_led_t) * led_count);
 
 	setup_handlers();
 
@@ -377,8 +361,7 @@ int main(int argc, char *argv[])
 			break;
 		}
 
-		// 1 fps
-		usleep(1000000 / 1);
+		usleep(1000000 / fps);
 	}
 
 	if (clear_on_exit)
