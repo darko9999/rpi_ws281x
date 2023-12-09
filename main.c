@@ -176,7 +176,7 @@ void line_create_color(void)
 	// {
 	// 	line[17 * j] = letters[j][current_row_start] ? 0xffffff : 0;
 	// }
-	current_column++;
+	// current_column++;
 
 	// printf("%2x %2x %2x\n", r, g, b);
 
@@ -199,7 +199,7 @@ void line_animate(void)
 			int letter = letters[row][columnOffset];
 			int lineIndex = column + row * 17;
 			int oddRow = row % 2 == 1;
-			if (!oddRow)
+			if (oddRow)
 				lineIndex = (17 - column) + row * 17;
 			line[lineIndex] = letter ? 0xFF00BF : 0;
 		}
@@ -225,7 +225,7 @@ static void setup_handlers(void)
 
 int main(int argc, char *argv[])
 {
-	printf("starting!");
+	printf("starting!\n");
 
 	ws2811_return_t ret;
 
