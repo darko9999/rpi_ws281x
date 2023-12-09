@@ -105,24 +105,6 @@ void line_render(void)
 	}
 }
 
-void line_animate(void)
-{
-	int i;
-	for (i = 0; i < led_count; i++)
-	{
-		line[(i + 1) % led_count] = line[i];
-	}
-}
-
-void matrix_clear(void)
-{
-	int i;
-	for (i = 0; i < led_count; i++)
-	{
-		line[i] = 0;
-	}
-}
-
 // 0x00200000, // red
 // 0x00201000, // orange
 // 0x00202000, // yellow
@@ -140,9 +122,27 @@ void matrix_clear(void)
 // 0x00101010, // white
 // 0x10101010, // white + W
 
+void line_animate(void)
+{
+	int i;
+	for (i = 1; i < led_count; i++)
+	{
+		line[i] = line[i - 1];
+	}
+}
+
 void line_create_color(void)
 {
-	line[0] = 0x00000020; // blue
+	line[0]++;
+}
+
+void matrix_clear(void)
+{
+	int i;
+	for (i = 0; i < led_count; i++)
+	{
+		line[i] = 0;
+	}
 }
 
 static void ctrl_c_handler(int signum)
