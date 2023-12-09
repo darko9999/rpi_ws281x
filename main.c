@@ -94,7 +94,7 @@ ws2811_led_t *line;
 
 static uint8_t running = 1;
 
-int fps = 1;
+int fps = 3;
 
 void line_render(void)
 {
@@ -137,8 +137,9 @@ uint8_t b;
 
 int orientation = -1;
 float intensity = 1.0;
-int pas = 10;
-int nombre_pas = 10;
+const int nombre_pas = 10;
+int max_pas = nombre_pas - 1;
+int pas = nombre_pas - 1;
 
 void line_create_color(void)
 {
@@ -146,25 +147,21 @@ void line_create_color(void)
 	// g = (line[0] >> 8) & 0xff;
 	// b = (line[0]) & 0xff;
 
-
 	pas = pas + orientation;
-	if (pas < 0)
+	if (pas <= 0)
 	{
-		pas = 0;
+		orientation = -orientation;
+	}
+	if (pas >= max_pas)
+	{
 		orientation = -orientation;
 	}
 
-	if(pas > nombre_pas)
-	{
-		pas = nombre_pas;
-		orientation = -orientation; 
-	}
+	intensity = (float)pas / (float)max_pas;
 
-	intensity = pas / nombre_pas;
-
-	r = 255 * intensity;
-	g = 3 * intensity;
-	b = 214 * intensity;
+	r = 255.0 * intensity;
+	g = 3.0 * intensity;
+	b = 214.0 * intensity;
 
 	// printf("%2x %2x %2x\n", r, g, b);
 
