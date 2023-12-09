@@ -94,7 +94,7 @@ ws2811_led_t *line;
 
 static uint8_t running = 1;
 
-int fps = 10;
+int fps = 1;
 
 void line_render(void)
 {
