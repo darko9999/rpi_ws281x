@@ -135,38 +135,36 @@ uint8_t r;
 uint8_t g;
 uint8_t b;
 
+int orientation = -1;
+float intensity = 1.0;
+int pas = 10;
+int nombre_pas = 10;
+
 void line_create_color(void)
 {
-	r = (line[0] >> 16) & 0xff;
-	g = (line[0] >> 8) & 0xff;
-	b = (line[0]) & 0xff;
+	// r = (line[0] >> 16) & 0xff;
+	// g = (line[0] >> 8) & 0xff;
+	// b = (line[0]) & 0xff;
 
-	if (b == 255)
+
+	pas = pas + orientation;
+	if (pas < 0)
 	{
-		b = 0;
-		g = 1;
-	}
-	if (g == 255)
-	{
-		g = 0;
-		r = 1;
-	}
-	if (r == 255)
-	{
-		r = 1;
-		g = 1;
-		b = 1;
+		pas = 0;
+		orientation = -orientation;
 	}
 
-	if (r > 0 && r < 255)
-		r++;
-	if (g > 0 && g < 255)
-		g++;
-	if (b > 0 && b < 255)
-		b++;
+	if(pas > nombre_pas)
+	{
+		pas = nombre_pas;
+		orientation = -orientation; 
+	}
 
-	if (r == 0 && g == 0 && b == 0)
-		b = 1;
+	intensity = pas / nombre_pas;
+
+	r = 255 * intensity;
+	g = 3 * intensity;
+	b = 214 * intensity;
 
 	// printf("%2x %2x %2x\n", r, g, b);
 
