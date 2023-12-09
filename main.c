@@ -66,8 +66,6 @@ int led_count = LED_COUNT;
 
 int clear_on_exit = 0;
 
-int fps = 1;
-
 ws2811_t ledstring =
 	{
 		.freq = TARGET_FREQ,
@@ -95,6 +93,8 @@ ws2811_t ledstring =
 ws2811_led_t *line;
 
 static uint8_t running = 1;
+
+int fps = 30;
 
 void line_render(void)
 {
@@ -127,7 +127,7 @@ void line_animate(void)
 	int i;
 	for (i = 1; i < led_count; i++)
 	{
-		line[i] = line[i - 1];
+		line[led_count - i] = line[led_count - i - 1];
 	}
 }
 
