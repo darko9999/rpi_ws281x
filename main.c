@@ -94,8 +94,6 @@ ws2811_led_t *line;
 
 static uint8_t running = 1;
 
-int fps = 3;
-
 void line_render(void)
 {
 	int i;
@@ -135,9 +133,10 @@ uint8_t r;
 uint8_t g;
 uint8_t b;
 
+int fps = 30;
 int orientation = -1;
 float intensity = 1.0;
-const int nombre_pas = 10;
+const int nombre_pas = 30;
 int max_pas = nombre_pas - 1;
 int pas = nombre_pas - 1;
 
