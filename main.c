@@ -133,7 +133,43 @@ void line_animate(void)
 
 void line_create_color(void)
 {
-	line[0]++;
+	int a = line[0];
+	int r = a >> 16 & 255;
+	int g = a >> 8 & 255;
+	int b = a & 255;
+
+	int r2 = r;
+	int g2 = g;
+	int b2 = b;
+
+	if (r2 > 0 && r2 < 255)
+		r2++;
+	if (g2 > 0 && g2 < 255)
+		g2++;
+	if (b2 > 0 && b2 < 255)
+		b2++;
+
+	if (b2 == 255)
+	{
+		b2 = 0;
+		g2 = 1;
+	}
+	if (g2 == 255)
+	{
+		g2 = 0;
+		r2 = 1;
+	}
+	if (r2 == 255)
+	{
+		b2 = 1;
+		g2 = 1;
+		r2 = 1;
+	}
+
+	line[0] = r2 >> 16 + g2 >> 8 + b2;
+
+	if (line[0] == 0)
+		line[0] = 1;
 }
 
 void matrix_clear(void)
