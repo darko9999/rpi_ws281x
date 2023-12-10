@@ -134,7 +134,7 @@ uint8_t r = 255;
 uint8_t g = 3;
 uint8_t b = 214;
 
-int fps = 1;
+int fps = 60;
 int orientation = -1;
 float intensity = 1.0;
 const int nombre_pas = 360;
@@ -148,29 +148,29 @@ const float tier_de_tour = 1.0 / 3.0 * deux_pi;
 
 void line_create_color(void)
 {
-	// r = (line[0] >> 16) & 0xff;
-	// g = (line[0] >> 8) & 0xff;
-	// b = (line[0]) & 0xff;
+	r = (line[0] >> 16) & 0xff;
+	g = (line[0] >> 8) & 0xff;
+	b = (line[0]) & 0xff;
 
-	// pas = pas + orientation;
-	// if (pas <= min_pas)
-	// {
-	// 	orientation = -orientation;
-	// }
-	// if (pas >= max_pas)
-	// {
-	// 	orientation = -orientation;
-	// }
+	pas = pas + orientation;
+	if (pas <= min_pas)
+	{
+		orientation = -orientation;
+	}
+	if (pas >= max_pas)
+	{
+		orientation = -orientation;
+	}
 
-	// intensity = (float)pas / (float)max_pas;
+	intensity = (float)pas / (float)max_pas;
 
-	// r = 255.0 * intensity;
-	// g = 3.0 * intensity;
-	// b = 214.0 * intensity;
+	r = 255.0 * intensity;
+	g = 3.0 * intensity;
+	b = 214.0 * intensity;
 
-	// r = 255.0 * sin(intensity * deux_pi);
-	// g = 255.0 * sin(intensity * deux_pi + tier_de_tour);
-	// b = 255.0 * sin(intensity * deux_pi + 2.0 * tier_de_tour);
+	r = 255.0 * sin(intensity * deux_pi);
+	g = 255.0 * sin(intensity * deux_pi + tier_de_tour);
+	b = 255.0 * sin(intensity * deux_pi + 2.0 * tier_de_tour);
 
 	// for (int j = 0; j < 7; j++)
 	// {
@@ -180,30 +180,30 @@ void line_create_color(void)
 
 	// printf("%2x %2x %2x\n", r, g, b);
 
-	// line[0] = (r << 16) + (g << 8) + b;
+	line[0] = (r << 16) + (g << 8) + b;
 
 	// printf("%8x\n", line[0]);
 }
 
 void line_animate(void)
 {
-	// for (int i = 1; i < led_count; i++)
-	// {
-	// 	line[led_count - i] = line[led_count - i - 1];
-	// }
-	for (int column = 0; column < 17; column++)
+	for (int i = 1; i < led_count; i++)
 	{
-		for (int row = 0; row < 7; row++)
-		{
-			int columnOffset = (current_column + column) % 35;
-			int letter = letters[row][columnOffset];
-			int lineIndex = column + row * 17;
-			int oddRow = row % 2 == 1;
-			if (oddRow)
-				lineIndex = (17 - column) + row * 17;
-			line[lineIndex] = letter ? 0xFF00BF : 0;
-		}
+		line[led_count - i] = line[led_count - i - 1];
 	}
+	// for (int column = 0; column < 17; column++)
+	// {
+	// 	for (int row = 0; row < 7; row++)
+	// 	{
+	// 		int columnOffset = (current_column + column) % 35;
+	// 		int letter = letters[row][columnOffset];
+	// 		int lineIndex = column + row * 17;
+	// 		int oddRow = row % 2 == 1;
+	// 		if (oddRow)
+	// 			lineIndex = (17 - column) + row * 17;
+	// 		line[lineIndex] = letter ? 0xFF00BF : 0;
+	// 	}
+	// }
 }
 
 static void ctrl_c_handler(int signum)
